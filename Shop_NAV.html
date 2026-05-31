@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnimeX Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #FF2E2E;
+  --gold: #FFD93D;
+  --dark: #090909;
+  --card-bg: #111;
+  --surface: #181818;
+  --border: rgba(255,255,255,0.06);
+  --text: #EEEEEE;
+  --muted: #666;
+  --green: #2EFF8A;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden;min-height:100vh;}
+
+/* ── BG BLOBS ── */
+.blob{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;animation:blobFloat 9s ease-in-out infinite alternate;}
+.b1{width:550px;height:550px;background:rgba(255,46,46,0.07);top:-200px;left:-200px;}
+.b2{width:420px;height:420px;background:rgba(255,217,61,0.06);bottom:-150px;right:-150px;animation-delay:-5s;}
+@keyframes blobFloat{from{transform:translate(0,0) scale(1);}to{transform:translate(50px,35px) scale(1.12);}}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:rgba(9,9,9,0.85);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:0.06em;background:linear-gradient(135deg,var(--gold),var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-right{display:flex;align-items:center;gap:20px;}
+.cart-btn{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 18px;color:var(--text);font-family:'Outfit',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.08em;cursor:pointer;transition:border-color 0.3s,box-shadow 0.3s;display:flex;align-items:center;gap:8px;}
+.cart-btn:hover{border-color:var(--gold);box-shadow:0 0 20px rgba(255,217,61,0.15);}
+.cart-count{background:var(--red);color:#fff;border-radius:100px;width:20px;height:20px;font-size:0.65rem;display:flex;align-items:center;justify-content:center;font-weight:800;transition:transform 0.2s;}
+.cart-count.bump{animation:bump 0.3s ease;}
+@keyframes bump{0%{transform:scale(1);}50%{transform:scale(1.5);}100%{transform:scale(1);}}
+
+/* ── PAGES ── */
+.page{display:none;animation:pageIn 0.45s ease forwards;}
+.page.active{display:block;}
+@keyframes pageIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══════════════════════════
+   HOME PAGE
+══════════════════════════ */
+.home-hero{position:relative;z-index:2;text-align:center;padding:80px 40px 40px;}
+.hero-eye{font-size:0.7rem;letter-spacing:0.4em;color:var(--red);text-transform:uppercase;margin-bottom:14px;animation:fadeUp 0.6s 0.1s both;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4.5rem,11vw,10rem);line-height:0.88;letter-spacing:0.04em;background:linear-gradient(135deg,var(--gold) 20%,#fff 55%,var(--red) 85%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fadeUp 0.7s 0.25s both;}
+.hero-sub{margin-top:18px;color:var(--muted);font-size:0.9rem;letter-spacing:0.07em;animation:fadeUp 0.6s 0.45s both;}
+.hero-divider{width:70px;height:2px;background:linear-gradient(90deg,var(--red),var(--gold));margin:28px auto 64px;animation:fadeUp 0.5s 0.6s both;}
+
+/* CATEGORY GRID */
+.section-label{position:relative;z-index:2;text-align:center;margin-bottom:36px;animation:fadeUp 0.6s 0.7s both;}
+.section-label h2{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.1em;color:var(--text);}
+.section-label p{color:var(--muted);font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;margin-top:4px;}
+
+.cat-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;padding:0 40px 100px;max-width:1300px;margin:0 auto;}
+
+.cat-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;cursor:pointer;position:relative;opacity:0;transform:translateY(40px) scale(0.97);animation:cardReveal 0.6s forwards;transition:border-color 0.35s,box-shadow 0.4s,transform 0.35s;}
+.cat-card:hover{border-color:rgba(255,217,61,0.45);box-shadow:0 0 40px rgba(255,217,61,0.12),0 20px 50px rgba(0,0,0,0.5);transform:translateY(-8px) scale(1.01);}
+.cat-card:nth-child(1){animation-delay:0.75s;} .cat-card:nth-child(2){animation-delay:0.88s;} .cat-card:nth-child(3){animation-delay:1.01s;} .cat-card:nth-child(4){animation-delay:1.14s;} .cat-card:nth-child(5){animation-delay:1.27s;} .cat-card:nth-child(6){animation-delay:1.4s;}
+
+.cat-img{width:100%;height:180px;object-fit:cover;transition:transform 0.5s,filter 0.4s;filter:brightness(0.8) saturate(1.1);}
+.cat-card:hover .cat-img{transform:scale(1.07);filter:brightness(1) saturate(1.4);}
+.cat-img-placeholder{width:100%;height:180px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:linear-gradient(135deg,#1a1a1a,#222);}
+
+.cat-body{padding:18px 18px 20px;}
+.cat-emoji{font-size:1.5rem;margin-bottom:8px;}
+.cat-name{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:0.05em;transition:color 0.3s;}
+.cat-card:hover .cat-name{color:var(--gold);}
+.cat-desc{font-size:0.75rem;color:var(--muted);margin-top:4px;}
+.cat-count{display:inline-block;margin-top:10px;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);background:rgba(255,46,46,0.1);padding:3px 10px;border-radius:100px;}
+.cat-arrow{position:absolute;top:14px;right:14px;width:30px;height:30px;background:rgba(255,217,61,0);border:1px solid rgba(255,217,61,0);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:background 0.3s,border-color 0.3s,transform 0.3s;}
+.cat-card:hover .cat-arrow{background:rgba(255,217,61,0.15);border-color:rgba(255,217,61,0.5);transform:translate(2px,-2px);}
+
+/* ══════════════════════════
+   PRODUCT LISTING PAGE
+══════════════════════════ */
+.listing-header{position:relative;z-index:2;padding:50px 40px 24px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.back-btn{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);padding:9px 16px;border-radius:10px;font-size:0.78rem;font-weight:600;color:var(--text);cursor:pointer;letter-spacing:0.06em;transition:border-color 0.3s,color 0.3s;}
+.back-btn:hover{border-color:var(--gold);color:var(--gold);}
+.listing-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:0.06em;line-height:1;background:linear-gradient(135deg,var(--gold),var(--text));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.listing-count-label{font-size:0.75rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:4px;}
+
+/* TOOLBAR */
+.toolbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:12px 40px 24px;flex-wrap:wrap;gap:12px;}
+.sort-wrap{display:flex;align-items:center;gap:10px;}
+.sort-label{font-size:0.72rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;}
+.sort-select{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:0.8rem;font-weight:600;cursor:pointer;transition:border-color 0.3s;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:14px;padding-right:34px;}
+.sort-select:hover,.sort-select:focus{border-color:var(--gold);}
+.sort-select option{background:#1a1a1a;}
+.result-info{font-size:0.75rem;color:var(--muted);letter-spacing:0.08em;}
+.result-info span{color:var(--gold);font-weight:700;}
+
+/* PRODUCT GRID */
+.product-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:24px;padding:0 40px 100px;max-width:1400px;margin:0 auto;}
+
+.product-card{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;overflow:hidden;position:relative;transition:border-color 0.35s,box-shadow 0.4s,transform 0.35s;animation:cardReveal 0.5s both;}
+.product-card:hover{border-color:rgba(255,217,61,0.35);box-shadow:0 0 35px rgba(255,217,61,0.1),0 16px 40px rgba(0,0,0,0.6);transform:translateY(-6px);}
+
+.p-img-wrap{position:relative;height:270px;overflow:hidden;}
+.p-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94),filter 0.4s;filter:brightness(0.85) saturate(1.1);}
+.product-card:hover .p-img-wrap img{transform:scale(1.07);filter:brightness(1) saturate(1.3);}
+.p-img-placeholder{width:100%;height:270px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:linear-gradient(135deg,#1a1a1a,#222);}
+.p-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(9,9,9,0.82) 0%,transparent 55%);}
+.p-badge{position:absolute;top:12px;left:12px;font-size:0.6rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;padding:4px 10px;border-radius:100px;z-index:2;}
+.badge-new{background:var(--green);color:#000;}
+.badge-hot{background:var(--red);color:#fff;}
+.badge-sale{background:var(--gold);color:#000;}
+.badge-rare{background:linear-gradient(135deg,#a855f7,#6366f1);color:#fff;}
+
+.p-body{padding:16px 18px 18px;}
+.p-company{font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:5px;}
+.p-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;line-height:1.1;transition:color 0.3s;margin-bottom:4px;}
+.product-card:hover .p-title{color:var(--gold);}
+.p-detail{font-size:0.74rem;color:var(--muted);margin-bottom:12px;min-height:1.1em;}
+.p-price{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:0.05em;color:var(--gold);margin-bottom:14px;}
+.p-price .original{font-size:1rem;color:var(--muted);text-decoration:line-through;margin-left:8px;font-family:'Outfit',sans-serif;font-weight:400;}
+
+/* ADD TO CART BTN */
+.add-btn{width:100%;padding:11px;border:none;border-radius:11px;background:linear-gradient(135deg,var(--red),#b01e1e);color:#fff;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;position:relative;overflow:hidden;transition:box-shadow 0.3s,transform 0.2s;}
+.add-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold),#c9960a);opacity:0;transition:opacity 0.3s;}
+.add-btn:hover::before{opacity:1;}
+.add-btn:hover{color:#000;box-shadow:0 6px 24px rgba(255,217,61,0.3);transform:translateY(-1px);}
+.add-btn:active{transform:scale(0.98);}
+.add-btn span{position:relative;z-index:1;}
+.add-btn.added span::before{content:'✓  ';}
+.add-btn.added{background:linear-gradient(135deg,#1a3a28,#12281c)!important;border:1px solid var(--green)!important;color:var(--green)!important;}
+.add-btn.added::before{opacity:0!important;}
+
+/* RIPPLE */
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:rippleAnim 0.5s linear;pointer-events:none;}
+@keyframes rippleAnim{to{transform:scale(4);opacity:0;}}
+
+/* ── CART DRAWER ── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.35s;backdrop-filter:blur(4px);}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.cart-drawer{position:fixed;top:0;right:0;width:min(420px,100vw);height:100%;background:#111;border-left:1px solid var(--border);z-index:201;transform:translateX(100%);transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);display:flex;flex-direction:column;}
+.cart-drawer.open{transform:translateX(0);}
+.drawer-head{padding:24px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.drawer-head h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.07em;color:var(--gold);}
+.close-btn{width:36px;height:36px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--muted);transition:color 0.2s,border-color 0.2s;}
+.close-btn:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+.drawer-body{flex:1;overflow-y:auto;padding:16px 24px;}
+.cart-empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.cart-empty .empty-icon{font-size:3.5rem;margin-bottom:16px;}
+.cart-empty p{font-size:0.85rem;letter-spacing:0.06em;}
+.cart-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);animation:fadeUp 0.3s ease both;}
+.cart-item-img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--surface);}
+.cart-item-info{flex:1;min-width:0;}
+.cart-item-name{font-weight:700;font-size:0.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cart-item-company{font-size:0.68rem;color:var(--muted);margin:2px 0;}
+.cart-item-price{color:var(--gold);font-weight:800;font-size:0.88rem;}
+.cart-item-actions{display:flex;align-items:center;gap:8px;margin-top:8px;}
+.qty-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s;}
+.qty-btn:hover{border-color:var(--gold);}
+.qty-val{font-weight:700;font-size:0.85rem;min-width:20px;text-align:center;}
+.remove-btn{margin-left:auto;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:0.75rem;padding:4px;transition:color 0.2s;}
+.remove-btn:hover{color:var(--red);}
+.drawer-foot{padding:20px 24px;border-top:1px solid var(--border);}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.cart-total-label{font-size:0.78rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.cart-total-amt{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gold);letter-spacing:0.05em;}
+.checkout-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--gold),#c9960a);color:#000;font-family:'Outfit',sans-serif;font-weight:800;font-size:0.88rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:box-shadow 0.3s,transform 0.2s;}
+.checkout-btn:hover{box-shadow:0 8px 28px rgba(255,217,61,0.35);transform:translateY(-1px);}
+
+/* TOAST */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);color:#000;padding:12px 22px;border-radius:12px;font-weight:700;font-size:0.82rem;letter-spacing:0.08em;z-index:300;opacity:0;transition:opacity 0.3s,transform 0.3s;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── WHATSAPP ORDER MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.35s;backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;transform:scale(0.94) translateY(20px);transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94),opacity 0.35s;opacity:0;}
+.modal-overlay.open .modal-box{transform:scale(1) translateY(0);opacity:1;}
+.modal-head{padding:28px 28px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-head-left{display:flex;align-items:center;gap:12px;}
+.wa-icon{width:42px;height:42px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.modal-head h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.05em;}
+.modal-head p{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+.modal-close{width:34px;height:34px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--muted);transition:color 0.2s,border-color 0.2s;flex-shrink:0;}
+.modal-close:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+
+/* ORDER SUMMARY INSIDE MODAL */
+.modal-summary{padding:20px 28px;border-bottom:1px solid var(--border);}
+.modal-summary-title{font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.summary-item{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.summary-item:last-child{border-bottom:none;}
+.si-name{font-size:0.82rem;font-weight:600;}
+.si-qty{font-size:0.7rem;color:var(--muted);margin-left:6px;}
+.si-price{font-size:0.82rem;color:var(--gold);font-weight:700;}
+.summary-total{display:flex;justify-content:space-between;align-items:center;padding-top:14px;margin-top:4px;}
+.st-label{font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+.st-amt{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;color:var(--gold);letter-spacing:0.05em;}
+
+/* FORM */
+.modal-form{padding:20px 28px 28px;}
+.form-title{font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.form-group input,
+.form-group textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.25s,box-shadow 0.25s;resize:none;}
+.form-group input:focus,
+.form-group textarea:focus{border-color:rgba(37,211,102,0.5);box-shadow:0 0 0 3px rgba(37,211,102,0.08);}
+.form-group input::placeholder,
+.form-group textarea::placeholder{color:var(--muted);}
+.form-group textarea{height:80px;}
+
+/* WA SEND BUTTON */
+.wa-send-btn{width:100%;padding:15px;border:none;border-radius:14px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-family:'Outfit',sans-serif;font-weight:800;font-size:0.9rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:box-shadow 0.3s,transform 0.2s;margin-top:4px;}
+.wa-send-btn:hover{box-shadow:0 8px 28px rgba(37,211,102,0.35);transform:translateY(-1px);}
+.wa-send-btn:active{transform:scale(0.98);}
+.wa-send-btn svg{width:20px;height:20px;fill:white;flex-shrink:0;}
+
+/* FIELD ERROR */
+.field-error{font-size:0.68rem;color:var(--red);margin-top:5px;display:none;}
+.form-group.has-error input,
+.form-group.has-error textarea{border-color:var(--red);}
+.form-group.has-error .field-error{display:block;}
+
+/* ── WHATSAPP ORDER MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.35s;backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;transform:scale(0.94) translateY(20px);transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94),opacity 0.35s;opacity:0;}
+.modal-overlay.open .modal-box{transform:scale(1) translateY(0);opacity:1;}
+.modal-head{padding:28px 28px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-head-left{display:flex;align-items:center;gap:12px;}
+.wa-icon{width:42px;height:42px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.modal-head h3{font-family:"Bebas Neue",sans-serif;font-size:1.6rem;letter-spacing:0.05em;}
+.modal-head p{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+.modal-close{width:34px;height:34px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--muted);transition:color 0.2s,border-color 0.2s;flex-shrink:0;}
+.modal-close:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+.modal-summary{padding:20px 28px;border-bottom:1px solid var(--border);}
+.modal-summary-title{font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.summary-item{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.summary-item:last-child{border-bottom:none;}
+.si-name{font-size:0.82rem;font-weight:600;}
+.si-qty{font-size:0.7rem;color:var(--muted);margin-left:6px;}
+.si-price{font-size:0.82rem;color:var(--gold);font-weight:700;}
+.summary-total{display:flex;justify-content:space-between;align-items:center;padding-top:14px;margin-top:4px;}
+.st-label{font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+.st-amt{font-family:"Bebas Neue",sans-serif;font-size:1.9rem;color:var(--gold);letter-spacing:0.05em;}
+.modal-form{padding:20px 28px 28px;}
+.form-title{font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.form-group input,.form-group textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:"Outfit",sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.25s,box-shadow 0.25s;resize:none;}
+.form-group input:focus,.form-group textarea:focus{border-color:rgba(37,211,102,0.5);box-shadow:0 0 0 3px rgba(37,211,102,0.08);}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--muted);}
+.form-group textarea{height:80px;}
+.wa-send-btn{width:100%;padding:15px;border:none;border-radius:14px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-family:"Outfit",sans-serif;font-weight:800;font-size:0.9rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:box-shadow 0.3s,transform 0.2s;margin-top:4px;}
+.wa-send-btn:hover{box-shadow:0 8px 28px rgba(37,211,102,0.35);transform:translateY(-1px);}
+.wa-send-btn:active{transform:scale(0.98);}
+.field-error{font-size:0.68rem;color:var(--red);margin-top:5px;display:none;}
+.form-group.has-error input,.form-group.has-error textarea{border-color:var(--red);}
+.form-group.has-error .field-error{display:block;}
+
+/* SHARED */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes cardReveal{to{opacity:1;transform:translateY(0) scale(1);}}
+</style>
+</head>
+<body>
+
+<!-- BG Blobs -->
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AnimeX</div>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="toggleDrawer()">
+      🛒 Cart
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <p class="hero-eye">Official Merch Store</p>
+    <h1>Shop by<br>Category</h1>
+    <p class="hero-sub">Figures · Keychains · Combos · &amp; More</p>
+  </div>
+  <div class="hero-divider"></div>
+
+  <div class="section-label">
+    <h2>All Categories</h2>
+    <p>Pick a world to explore</p>
+  </div>
+
+  <div class="cat-grid" id="catGrid"></div>
+</div>
+
+<!-- LISTING PAGE -->
+<div class="page" id="page-listing">
+  <div class="listing-header">
+    <div>
+      <button class="back-btn" onclick="goHome()">← Back to Categories</button>
+    </div>
+    <div style="text-align:right">
+      <div class="listing-title" id="listingTitle">Keychains</div>
+      <div class="listing-count-label" id="listingCountLabel">0 items</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="sort-wrap">
+      <span class="sort-label">Sort by</span>
+      <select class="sort-select" id="sortSelect" onchange="applySort()">
+        <option value="default">Featured</option>
+        <option value="low">Price: Low to High</option>
+        <option value="high">Price: High to Low</option>
+        <option value="name">Name A–Z</option>
+      </select>
+    </div>
+    <div class="result-info">Showing <span id="resultCount">0</span> products</div>
+  </div>
+
+  <div class="product-grid" id="productGrid"></div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h2>Your Cart</h2>
+    <button class="close-btn" onclick="toggleDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="cartBody"></div>
+  <div class="drawer-foot" id="cartFoot" style="display:none">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-amt" id="cartTotal">₹0</span>
+    </div>
+    <button class="checkout-btn" onclick="openWaModal()">Order via WhatsApp 💬</button>
+  </div>
+</div>
+
+<!-- WHATSAPP ORDER MODAL -->
+<div class="modal-overlay" id="waOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal-box" id="waModal">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <div class="wa-icon">💬</div>
+        <div>
+          <h3>Order via WhatsApp</h3>
+          <p>We'll send your order details directly</p>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeWaModal()">✕</button>
+    </div>
+    <div class="modal-summary">
+      <div class="modal-summary-title">Your Order</div>
+      <div id="waSummaryItems"></div>
+      <div class="summary-total">
+        <span class="st-label">Total</span>
+        <span class="st-amt" id="waSummaryTotal">₹0</span>
+      </div>
+    </div>
+    <div class="modal-form">
+      <div class="form-title">Your Details</div>
+      <div class="form-group" id="fg-name">
+        <label>Full Name</label>
+        <input type="text" id="wa-name" placeholder="e.g. Surajit Das" maxlength="60">
+        <div class="field-error">Please enter your name</div>
+      </div>
+      <div class="form-group" id="fg-phone">
+        <label>WhatsApp Number</label>
+        <input type="tel" id="wa-phone" placeholder="e.g. 9876543210" maxlength="15">
+        <div class="field-error">Please enter a valid 10-digit number</div>
+      </div>
+      <div class="form-group" id="fg-address">
+        <label>Delivery Address</label>
+        <textarea id="wa-address" placeholder="House No., Street, City, PIN code"></textarea>
+        <div class="field-error">Please enter your delivery address</div>
+      </div>
+      <div class="form-group">
+        <label>Note (optional)</label>
+        <input type="text" id="wa-note" placeholder="Any special request...">
+      </div>
+      <button class="wa-send-btn" onclick="sendWhatsAppOrder()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Send Order on WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════
+   DATA
+═══════════════════════════════ */
+const categories = [
+  {
+    id: 'keychain',
+    name: 'Keychains',
+    emoji: '🔑',
+    desc: 'Cute & durable anime keychains',
+    image: 'https://images.unsplash.com/photo-1563902893506-785c5d4fb5de?w=500&auto=format&fit=crop&q=60',
+  },
+  {
+    id: 'under99',
+    name: 'Under ₹99',
+    emoji: '🔥',
+    desc: 'Budget picks, big feels',
+    image: 'https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=500&auto=format&fit=crop&q=60',
+  },
+  {
+    id: 'combo',
+    name: 'Combo Offers',
+    emoji: '🎁',
+    desc: 'Bundled for maximum value',
+    image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=500&auto=format&fit=crop&q=60',
+  },
+  {
+    id: 'naruto',
+    name: 'Naruto',
+    emoji: '🍥',
+    desc: 'Official Naruto collectibles',
+    image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&auto=format&fit=crop&q=60',
+  },
+  {
+    id: 'marvel',
+    name: 'Marvel',
+    emoji: '⚡',
+    desc: 'Avengers & beyond',
+    image: 'https://images.unsplash.com/photo-1608889175123-8ee362201f81?w=500&auto=format&fit=crop&q=60',
+  },
+  {
+    id: 'more',
+    name: 'More & More',
+    emoji: '✨',
+    desc: 'DC, Demon Slayer, Dragon Ball…',
+    image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&auto=format&fit=crop&q=60',
+  },
+];
+
+const allProducts = {
+  keychain: [
+    { id:'kc1', title:'Naruto Leaf Keychain',    company:'Anime Universe', detail:'Metal alloy · Gold finish',    price:79,  badge:'hot',  image:'https://images.unsplash.com/photo-1563902893506-785c5d4fb5de?w=500&auto=format&fit=crop&q=60' },
+    { id:'kc2', title:'Sharingan Eye Keychain',  company:'Anime Universe', detail:'Enamel painted · 4cm',         price:89,  badge:'new',  image:'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&auto=format&fit=crop&q=60' },
+    { id:'kc3', title:'Spider-Man Mini Keychain',company:'Marvel',         detail:'Glow-in-dark effect',          price:99,  badge:'sale', image:'https://images.unsplash.com/photo-1608889175123-8ee362201f81?w=500&auto=format&fit=crop&q=60' },
+    { id:'kc4', title:'Batman Symbol Keychain',  company:'DC Comics',      detail:'Stainless steel engraved',     price:129, badge:null,   image:'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&auto=format&fit=crop&q=60' },
+    { id:'kc5', title:'Demon Slayer Keychain',   company:'Kimetsu',        detail:'Tanjiro sword charm',          price:69,  badge:'new',  image:'https://images.unsplash.com/photo-1635863138275-d9b33299680b?w=500&auto=format&fit=crop&q=60' },
+    { id:'kc6', title:'Dragon Ball Z Keychain',  company:'Toei Animation', detail:'7 star Dragon Ball charm',     price:85,  badge:null,   image:'https://images.unsplash.com/photo-1596727147705-61a532a659bd?w=500&auto=format&fit=crop&q=60' },
+  ],
+  under99: [
+    { id:'u1', title:'Mini Naruto Sticker Set', company:'Anime Universe', detail:'Pack of 10 waterproof stickers',price:49, badge:'hot',  image:'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&auto=format&fit=crop&q=60' },
+    { id:'u2', title:'One Piece Button Badge',  company:'Toei Animation', detail:'55mm metal badge',              price:39, badge:'sale', image:'https://images.unsplash.com/photo-1635863138275-d9b33299680b?w=500&auto=format&fit=crop&q=60' },
+    { id:'u3', title:'Totoro Bookmark',         company:'Studio Ghibli',  detail:'Laminated art print',           price:59, badge:'new',  image:'https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=500&auto=format&fit=crop&q=60' },
+    { id:'u4', title:'Pikachu Washi Tape',      company:'Pokemon',        detail:'15mm · 5m roll',                price:79, badge:null,   image:'https://images.unsplash.com/photo-1596727147705-61a532a659bd?w=500&auto=format&fit=crop&q=60' },
+    { id:'u5', title:'Attack on Titan Patch',   company:'Mappa',          detail:'Iron-on embroidered patch',     price:89, badge:null,   image:'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=500&auto=format&fit=crop&q=60' },
+  ],
+  combo: [
+    { id:'co1', title:'Naruto Starter Pack',   company:'Anime Universe', detail:'Figure + Keychain + Badge',       price:299, originalPrice:450, badge:'sale', image:'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&auto=format&fit=crop&q=60' },
+    { id:'co2', title:'Marvel Mega Bundle',    company:'Marvel',         detail:'3 figures + sticker sheet',       price:599, originalPrice:850, badge:'hot',  image:'https://images.unsplash.com/photo-1608889175123-8ee362201f81?w=500&auto=format&fit=crop&q=60' },
+    { id:'co3', title:'Ghibli Gift Set',       company:'Studio Ghibli',  detail:'Totoro + Spirited Away set',      price:449, originalPrice:600, badge:'new',  image:'https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=500&auto=format&fit=crop&q=60' },
+    { id:'co4', title:'Demon Slayer Trio',     company:'Kimetsu',        detail:'Tanjiro, Zenitsu & Inosuke',      price:389, originalPrice:520, badge:'rare', image:'https://images.unsplash.com/photo-1635863138275-d9b33299680b?w=500&auto=format&fit=crop&q=60' },
+  ],
+  naruto: [
+    { id:'na1', title:'Naruto Uzumaki Figure', company:'Anime Universe', detail:'Sage mode · 20cm · Resin',  price:599,  badge:'hot',  image:'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&auto=format&fit=crop&q=60' },
+    { id:'na2', title:'Sasuke Figure',         company:'Anime Universe', detail:'Rinnegan activated · 20cm', price:649,  badge:'new',  image:'https://images.unsplash.com/photo-1635863138275-d9b33299680b?w=500&auto=format&fit=crop&q=60' },
+    { id:'na3', title:'Itachi Poster',         company:'Anime Universe', detail:'A2 size · Matte finish',    price:149,  badge:null,   image:'https://images.unsplash.com/photo-1596727147705-61a532a659bd?w=500&auto=format&fit=crop&q=60' },
+    { id:'na4', title:'Konoha Headband',       company:'Anime Universe', detail:'Metal plate · Adjustable',  price:199,  badge:'sale', image:'https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=500&auto=format&fit=crop&q=60' },
+    { id:'na5', title:'Akatsuki Cloak',        company:'Anime Universe', detail:'Full size polyester',       price:899,  badge:'rare', image:'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=500&auto=format&fit=crop&q=60' },
+  ],
+  marvel: [
+    { id:'ma1', title:'Iron Man Helmet',       company:'Marvel', detail:'1:1 Scale · LED eyes',         price:2499, badge:'rare', image:'https://images.unsplash.com/photo-1608889175123-8ee362201f81?w=500&auto=format&fit=crop&q=60' },
+    { id:'ma2', title:'Spider-Man Figure',     company:'Marvel', detail:'Dynamic wall-crawl pose',      price:799,  badge:'hot',  image:'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&auto=format&fit=crop&q=60' },
+    { id:'ma3', title:'Thanos Gauntlet',       company:'Marvel', detail:'Die-cast metal replica',       price:1299, badge:'new',  image:'https://images.unsplash.com/photo-1635863138275-d9b33299680b?w=500&auto=format&fit=crop&q=60' },
+    { id:'ma4', title:'Avengers Poster Set',   company:'Marvel', detail:'6 A3 posters · Glossy',       price:349,  badge:'sale', image:'https://images.unsplash.com/photo-1596727147705-61a532a659bd?w=500&auto=format&fit=crop&q=60' },
+  ],
+  more: [
+    { id:'mo1', title:'Batman Dark Knight',    company:'DC Comics',      detail:'Hyperdetailed · 25cm',    price:899,  badge:'hot',  image:'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&auto=format&fit=crop&q=60' },
+    { id:'mo2', title:'Tanjiro Figure',        company:'Kimetsu',        detail:'Water breathing pose',    price:699,  badge:'new',  image:'https://images.unsplash.com/photo-1635863138275-d9b33299680b?w=500&auto=format&fit=crop&q=60' },
+    { id:'mo3', title:'Goku SSJ Figure',       company:'Toei Animation', detail:'Super Saiyan aura base',  price:1199, badge:'rare', image:'https://images.unsplash.com/photo-1596727147705-61a532a659bd?w=500&auto=format&fit=crop&q=60' },
+    { id:'mo4', title:'Totoro Plush 30cm',     company:'Studio Ghibli',  detail:'Soft PP cotton fill',     price:499,  badge:null,   image:'https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=500&auto=format&fit=crop&q=60' },
+    { id:'mo5', title:'Luffy Gear 5 Figure',   company:'Toei Animation', detail:'Joy Boy base included',   price:849,  badge:'hot',  image:'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=500&auto=format&fit=crop&q=60' },
+  ],
+};
+
+/* ═══════════════════════════════
+   STATE
+═══════════════════════════════ */
+let cart = [];
+let currentCat = null;
+let currentProducts = [];
+
+/* ═══════════════════════════════
+   BUILD CATEGORIES
+═══════════════════════════════ */
+const catGrid = document.getElementById('catGrid');
+categories.forEach(cat => {
+  const count = (allProducts[cat.id] || []).length;
+  const card = document.createElement('div');
+  card.className = 'cat-card';
+  card.innerHTML = `
+    ${cat.image
+      ? `<img class="cat-img" src="${cat.image}" alt="${cat.name}" loading="lazy">`
+      : `<div class="cat-img-placeholder">${cat.emoji}</div>`}
+    <div class="cat-arrow">→</div>
+    <div class="cat-body">
+      <div class="cat-emoji">${cat.emoji}</div>
+      <div class="cat-name">${cat.name}</div>
+      <div class="cat-desc">${cat.desc}</div>
+      <span class="cat-count">${count} items</span>
+    </div>
+  `;
+  card.addEventListener('click', () => openCategory(cat.id));
+  catGrid.appendChild(card);
+});
+
+/* ═══════════════════════════════
+   NAVIGATION
+═══════════════════════════════ */
+function openCategory(id) {
+  currentCat = id;
+  currentProducts = [...(allProducts[id] || [])];
+  document.getElementById('sortSelect').value = 'default';
+  renderListing();
+  showPage('listing');
+}
+
+function goHome() {
+  showPage('home');
+}
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ═══════════════════════════════
+   LISTING RENDER
+═══════════════════════════════ */
+function renderListing() {
+  const cat = categories.find(c => c.id === currentCat);
+  document.getElementById('listingTitle').textContent = cat ? cat.name : '';
+  document.getElementById('listingCountLabel').textContent = currentProducts.length + ' items';
+  document.getElementById('resultCount').textContent = currentProducts.length;
+
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = '';
+
+  currentProducts.forEach((p, i) => {
+    const inCart = cart.find(c => c.id === p.id);
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.style.animationDelay = (i * 0.07) + 's';
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px) scale(0.97)';
+
+    const badgeMap = { hot:'badge-hot', new:'badge-new', sale:'badge-sale', rare:'badge-rare' };
+    const badgeHTML = p.badge ? `<div class="p-badge ${badgeMap[p.badge] || ''}">${p.badge}</div>` : '';
+
+    card.innerHTML = `
+      <div class="p-img-wrap">
+        ${p.image
+          ? `<img src="${p.image}" alt="${p.title}" loading="lazy">`
+          : `<div class="p-img-placeholder">🎭</div>`}
+        <div class="p-overlay"></div>
+        ${badgeHTML}
+      </div>
+      <div class="p-body">
+        <div class="p-company">${p.company}</div>
+        <div class="p-title">${p.title}</div>
+        <div class="p-detail">${p.detail || ''}</div>
+        <div class="p-price">₹${p.price}
+          ${p.originalPrice ? `<span class="original">₹${p.originalPrice}</span>` : ''}
+        </div>
+        <button class="add-btn ${inCart ? 'added' : ''}" data-id="${p.id}" onclick="addToCart('${p.id}', this)">
+          <span>${inCart ? 'Added to Cart' : 'Add to Cart'}</span>
+        </button>
+      </div>
+    `;
+
+    /* ripple */
+    const btn = card.querySelector('.add-btn');
+    btn.addEventListener('click', function(e) {
+      if (this.classList.contains('added')) return;
+      const r = document.createElement('span');
+      r.className = 'ripple';
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+      btn.appendChild(r);
+      r.addEventListener('animationend', () => r.remove());
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+/* ═══════════════════════════════
+   SORT
+═══════════════════════════════ */
+function applySort() {
+  const val = document.getElementById('sortSelect').value;
+  const base = [...(allProducts[currentCat] || [])];
+  if (val === 'low')  currentProducts = base.sort((a,b) => a.price - b.price);
+  else if (val === 'high') currentProducts = base.sort((a,b) => b.price - a.price);
+  else if (val === 'name') currentProducts = base.sort((a,b) => a.title.localeCompare(b.title));
+  else currentProducts = base;
+  renderListing();
+}
+
+/* ═══════════════════════════════
+   CART LOGIC
+═══════════════════════════════ */
+function addToCart(id, btn) {
+  if (btn.classList.contains('added')) return;
+
+  const product = Object.values(allProducts).flat().find(p => p.id === id);
+  if (!product) return;
+
+  const existing = cart.find(c => c.id === id);
+  if (existing) { existing.qty++; }
+  else { cart.push({ ...product, qty: 1 }); }
+
+  btn.classList.add('added');
+  btn.querySelector('span').textContent = 'Added to Cart';
+
+  updateCartCount();
+  showToast('🛒 ' + product.title + ' added!');
+  renderCartDrawer();
+}
+
+function updateCartCount() {
+  const total = cart.reduce((s, c) => s + c.qty, 0);
+  const el = document.getElementById('cartCount');
+  el.textContent = total;
+  el.classList.remove('bump');
+  void el.offsetWidth;
+  el.classList.add('bump');
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
+  updateCartCount();
+  renderCartDrawer();
+  /* update button in listing if visible */
+  const btn = document.querySelector(`.add-btn[data-id="${id}"]`);
+  if (btn && cart.find(c => c.id === id) === undefined) {
+    btn.classList.remove('added');
+    btn.querySelector('span').textContent = 'Add to Cart';
+  }
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  updateCartCount();
+  renderCartDrawer();
+  const btn = document.querySelector(`.add-btn[data-id="${id}"]`);
+  if (btn) { btn.classList.remove('added'); btn.querySelector('span').textContent = 'Add to Cart'; }
+}
+
+function renderCartDrawer() {
+  const body = document.getElementById('cartBody');
+  const foot = document.getElementById('cartFoot');
+
+  if (cart.length === 0) {
+    body.innerHTML = `<div class="cart-empty"><div class="empty-icon">🛒</div><p>Your cart is empty.<br>Start adding some goodies!</p></div>`;
+    foot.style.display = 'none';
+    return;
+  }
+
+  foot.style.display = 'block';
+  body.innerHTML = '';
+  let total = 0;
+
+  cart.forEach(item => {
+    total += item.price * item.qty;
+    const el = document.createElement('div');
+    el.className = 'cart-item';
+    el.innerHTML = `
+      ${item.image ? `<img class="cart-item-img" src="${item.image}" alt="${item.title}">` : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;font-size:1.5rem">🎭</div>`}
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.title}</div>
+        <div class="cart-item-company">${item.company}</div>
+        <div class="cart-item-price">₹${item.price}</div>
+        <div class="cart-item-actions">
+          <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+          <button class="remove-btn" onclick="removeFromCart('${item.id}')">Remove</button>
+        </div>
+      </div>
+    `;
+    body.appendChild(el);
+  });
+
+  document.getElementById('cartTotal').textContent = '₹' + total.toLocaleString('en-IN');
+}
+
+function toggleDrawer() {
+  const overlay = document.getElementById('drawerOverlay');
+  const drawer  = document.getElementById('cartDrawer');
+  const open = drawer.classList.contains('open');
+  if (!open) renderCartDrawer();
+  overlay.classList.toggle('open', !open);
+  drawer.classList.toggle('open', !open);
+}
+
+/* ═══════════════════════════════
+   TOAST
+═══════════════════════════════ */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ═══════════════════════════════
+   WHATSAPP ORDER
+═══════════════════════════════ */
+const WA_NUMBER = '919999999999'; // ← Replace with your WhatsApp number (country code + number, no +)
+
+function openWaModal() {
+  if (cart.length === 0) return;
+  // Populate summary
+  const itemsEl = document.getElementById('waSummaryItems');
+  itemsEl.innerHTML = '';
+  let total = 0;
+  cart.forEach(item => {
+    const lineTotal = item.price * item.qty;
+    total += lineTotal;
+    const row = document.createElement('div');
+    row.className = 'summary-item';
+    row.innerHTML = `
+      <span class="si-name">${item.title}<span class="si-qty">x${item.qty}</span></span>
+      <span class="si-price">₹${lineTotal.toLocaleString('en-IN')}</span>
+    `;
+    itemsEl.appendChild(row);
+  });
+  document.getElementById('waSummaryTotal').textContent = '₹' + total.toLocaleString('en-IN');
+  // Clear errors
+  ['fg-name','fg-phone','fg-address'].forEach(id => document.getElementById(id).classList.remove('has-error'));
+  document.getElementById('waOverlay').classList.add('open');
+  // Close cart drawer
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+}
+
+function closeWaModal() {
+  document.getElementById('waOverlay').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('waOverlay')) closeWaModal();
+}
+
+function sendWhatsAppOrder() {
+  const name    = document.getElementById('wa-name').value.trim();
+  const phone   = document.getElementById('wa-phone').value.trim();
+  const address = document.getElementById('wa-address').value.trim();
+  const note    = document.getElementById('wa-note').value.trim();
+
+  let valid = true;
+  if (!name)    { document.getElementById('fg-name').classList.add('has-error');    valid = false; }
+  else            document.getElementById('fg-name').classList.remove('has-error');
+  if (!phone || !/^[0-9]{10,15}$/.test(phone.replace(/\s/g,''))) {
+    document.getElementById('fg-phone').classList.add('has-error'); valid = false;
+  } else document.getElementById('fg-phone').classList.remove('has-error');
+  if (!address) { document.getElementById('fg-address').classList.add('has-error'); valid = false; }
+  else            document.getElementById('fg-address').classList.remove('has-error');
+  if (!valid) return;
+
+  // Build message
+  let total = 0;
+  let itemLines = cart.map(item => {
+    const lineTotal = item.price * item.qty;
+    total += lineTotal;
+    return `  • ${item.title} (${item.company}) — Qty: ${item.qty} — ₹${lineTotal.toLocaleString('en-IN')}`;
+  }).join('\n');
+
+  const msg = [
+    '🛍️ *New Order from AnimeX Shop*',
+    '',
+    '👤 *Customer Details*',
+    `Name: ${name}`,
+    `Phone: ${phone}`,
+    `Address: ${address}`,
+    note ? `Note: ${note}` : null,
+    '',
+    '🛒 *Order Summary*',
+    itemLines,
+    '',
+    `💰 *Total: ₹${total.toLocaleString('en-IN')}*`,
+    '',
+    '_Please confirm availability and share payment details. Thank you! 🙏_'
+  ].filter(l => l !== null).join('\n');
+
+  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+  closeWaModal();
+  showToast('✅ Opening WhatsApp...');
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+1. when click on stories it open a new tab and give me varient option of read comic story based on web series or anime figure. And then we can click based on our like and start reading. I want to make this place as image. Like any pdf or image scrollable if long story. So that if anything want to be change i will just replace the image or pdf. 
+
+2. When click on contact  button, it should open a new tab showing all avail source of contact along with a option chat on WhatsApp.  

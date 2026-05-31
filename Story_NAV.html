@@ -1,0 +1,773 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Anime Stories</title>
+
+  <!-- Bootstrap -->
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Google Font -->
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Main CSS -->
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- STORY PAGE CSS -->
+
+  <style>
+
+    body{
+      background:#111111;
+      color:white;
+      font-family:'Poppins',sans-serif;
+    }
+
+    .story-page{
+      min-height:100vh;
+      padding-top:80px;
+    }
+
+    .section-title{
+      text-align:center;
+      margin-bottom:60px;
+    }
+
+    .section-title h2{
+      font-size:3rem;
+      font-weight:700;
+      color:#FFD93D;
+    }
+
+    .story-card{
+
+      background:#1B1B1B;
+
+      border-radius:25px;
+
+      overflow:hidden;
+
+      transition:0.5s;
+
+      border:1px solid transparent;
+
+      height:100%;
+    }
+
+    .story-card:hover{
+
+      transform:translateY(-10px);
+
+      border-color:#FFD93D;
+
+      box-shadow:0 0 30px rgba(255,217,61,0.3);
+    }
+
+    .story-card img{
+
+      width:100%;
+
+      height:450px;
+
+      object-fit:cover;
+
+      transition:0.5s;
+    }
+
+    .story-card:hover img{
+      transform:scale(1.05);
+    }
+
+    .story-content{
+      padding:25px;
+      text-align:center;
+    }
+
+    .story-content h3{
+      margin-bottom:20px;
+      font-weight:600;
+    }
+
+    .btn-custom{
+
+      background:#FF2E2E;
+
+      color:white;
+
+      padding:12px 30px;
+
+      border:none;
+
+      border-radius:50px;
+
+      text-decoration:none;
+
+      display:inline-block;
+
+      transition:0.4s;
+    }
+
+    .btn-custom:hover{
+
+      background:#FFD93D;
+
+      color:black;
+
+      transform:translateY(-4px);
+    }
+
+    /* PDF VIEWER */
+
+    .pdf-viewer{
+      margin-top:80px;
+      display:none;
+    }
+
+    .pdf-viewer iframe{
+
+      width:100%;
+
+      height:100vh;
+
+      border:none;
+
+      border-radius:20px;
+    }
+
+    /* BACK BUTTON */
+
+    .back-btn{
+
+      margin-bottom:25px;
+    }
+
+    @media(max-width:768px){
+
+      .section-title h2{
+        font-size:2rem;
+      }
+
+      .story-card img{
+        height:350px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- STORY PAGE -->
+
+  ```html id="4u0b8v"
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>AnimeX Comic Library</title>
+
+  <!-- Bootstrap -->
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Google Font -->
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+      background:#0f0f0f;
+      color:white;
+      overflow-x:hidden;
+    }
+
+    /* =========================
+    COMIC LIBRARY
+    ========================= */
+
+    .comic-library{
+      min-height:100vh;
+      padding:60px 0;
+    }
+
+    .library-title{
+
+      color:#FFD93D;
+
+      font-size:3rem;
+
+      font-weight:700;
+    }
+
+    .comic-scroll{
+
+      display:flex;
+
+      gap:25px;
+
+      overflow-x:auto;
+
+      padding-bottom:20px;
+
+      scroll-behavior:smooth;
+    }
+
+    /* SCROLLBAR */
+
+    .comic-scroll::-webkit-scrollbar{
+      height:8px;
+    }
+
+    .comic-scroll::-webkit-scrollbar-track{
+      background:#1B1B1B;
+    }
+
+    .comic-scroll::-webkit-scrollbar-thumb{
+      background:#FF2E2E;
+      border-radius:20px;
+    }
+
+    /* CARD */
+
+    .comic-card{
+
+      min-width:260px;
+
+      background:#151515;
+
+      border-radius:20px;
+
+      overflow:hidden;
+
+      transition:0.5s;
+
+      flex-shrink:0;
+
+      border:1px solid transparent;
+    }
+
+    .comic-card:hover{
+
+      transform:translateY(-10px);
+
+      border-color:#FFD93D;
+
+      box-shadow:0 0 25px rgba(255,217,61,0.3);
+    }
+
+    .comic-image{
+      position:relative;
+    }
+
+    .comic-image img{
+
+      width:100%;
+
+      height:380px;
+
+      object-fit:cover;
+
+      transition:0.5s;
+    }
+
+    .comic-card:hover img{
+      transform:scale(1.05);
+    }
+
+    /* BADGE */
+
+    .premium-badge{
+
+      position:absolute;
+
+      top:15px;
+      left:15px;
+
+      background:#FF2E2E;
+
+      color:white;
+
+      padding:6px 14px;
+
+      border-radius:50px;
+
+      font-size:0.8rem;
+
+      font-weight:600;
+    }
+
+    /* INFO */
+
+    .comic-info{
+      padding:20px;
+    }
+
+    .comic-info h3{
+
+      font-size:1.4rem;
+
+      margin-bottom:8px;
+    }
+
+    .comic-info p{
+      color:#aaa;
+    }
+
+    /* BUTTON */
+
+    .read-btn{
+
+      width:100%;
+
+      margin-top:15px;
+
+      background:#FFD93D;
+
+      border:none;
+
+      padding:12px;
+
+      border-radius:12px;
+
+      font-weight:600;
+
+      transition:0.4s;
+    }
+
+    .read-btn:hover{
+
+      background:#FF2E2E;
+
+      color:white;
+    }
+
+    /* PDF VIEWER */
+
+    .pdf-viewer{
+
+      display:none;
+
+      margin-top:40px;
+    }
+
+    .pdf-viewer iframe{
+
+      width:100%;
+
+      height:100vh;
+
+      border:none;
+
+      border-radius:20px;
+    }
+
+    /* BACK BUTTON */
+
+    .back-btn{
+
+      background:#FF2E2E;
+
+      color:white;
+
+      border:none;
+
+      padding:12px 25px;
+
+      border-radius:50px;
+
+      margin-bottom:20px;
+
+      transition:0.4s;
+    }
+
+    .back-btn:hover{
+
+      background:#FFD93D;
+
+      color:black;
+    }
+
+    /* MOBILE */
+
+    @media(max-width:768px){
+
+      .library-title{
+        font-size:2rem;
+      }
+
+      .comic-card{
+        min-width:220px;
+      }
+
+      .comic-image img{
+        height:320px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- =========================
+  COMIC LIBRARY
+  ========================= -->
+
+  <section class="comic-library">
+
+    <div class="container-fluid px-4">
+
+      <!-- TITLE -->
+
+      <div class="mb-5">
+
+        <h2 class="library-title">
+          Explore Comic Stories
+        </h2>
+
+        <p class="text-secondary">
+          Choose your favorite anime or superhero universe
+        </p>
+
+      </div>
+
+      <!-- SCROLLABLE ROW -->
+
+      <div class="comic-scroll" id="comicSection">
+
+        <!-- CARD -->
+
+        <div class="comic-card">
+
+          <div class="comic-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1974&auto=format&fit=crop"
+            >
+
+            <span class="premium-badge">
+              FREE
+            </span>
+
+          </div>
+
+          <div class="comic-info">
+
+            <h3>Invincible</h3>
+
+            <p>Image Comics</p>
+
+            <button
+              class="read-btn"
+              onclick="openPDF('stories/invincible.pdf')">
+
+              Read Now
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- CARD -->
+
+        <div class="comic-card">
+
+          <div class="comic-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071&auto=format&fit=crop"
+            >
+
+            <span class="premium-badge">
+              GOLD
+            </span>
+
+          </div>
+
+          <div class="comic-info">
+
+            <h3>Batman</h3>
+
+            <p>DC Comics</p>
+
+            <button
+              class="read-btn"
+              onclick="openPDF('stories/batman.pdf')">
+
+              Read Now
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- CARD -->
+
+        <div class="comic-card">
+
+          <div class="comic-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1608889175123-8ee362201f81?q=80&w=1974&auto=format&fit=crop"
+            >
+
+          </div>
+
+          <div class="comic-info">
+
+            <h3>Daredevil</h3>
+
+            <p>Marvel Comics</p>
+
+            <button
+              class="read-btn"
+              onclick="openPDF('stories/daredevil.pdf')">
+
+              Read Now
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- CARD -->
+
+        <div class="comic-card">
+
+          <div class="comic-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1612036782180-6f0822045dfe?q=80&w=1974&auto=format&fit=crop"
+            >
+
+          </div>
+
+          <div class="comic-info">
+
+            <h3>Naruto</h3>
+
+            <p>Anime Universe</p>
+
+            <button
+              class="read-btn"
+              onclick="openPDF('stories/naruto.pdf')">
+
+              Read Now
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- =========================
+      PDF VIEWER
+      ========================= -->
+
+      <div
+        class="pdf-viewer"
+        id="pdfViewer"
+      >
+
+        <button
+          class="back-btn"
+          onclick="closePDF()">
+
+          ← Back To Library
+
+        </button>
+
+        <iframe id="pdfFrame"></iframe>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- =========================
+  JAVASCRIPT
+  ========================= -->
+
+  <script>
+
+    /* =========================
+    OPEN PDF
+    ========================= */
+
+    function openPDF(pdfPath){
+
+      /* Hide Comics */
+
+      document.getElementById(
+        "comicSection"
+      ).style.display = "none";
+
+      /* Show PDF Viewer */
+
+      document.getElementById(
+        "pdfViewer"
+      ).style.display = "block";
+
+      /* Load PDF */
+
+      document.getElementById(
+        "pdfFrame"
+      ).src = pdfPath;
+
+      /* Scroll Top */
+
+      window.scrollTo({
+        top:0,
+        behavior:"smooth"
+      });
+
+    }
+
+    /* =========================
+    CLOSE PDF
+    ========================= */
+
+    function closePDF(){
+
+      /* Show Comics */
+
+      document.getElementById(
+        "comicSection"
+      ).style.display = "flex";
+
+      /* Hide Viewer */
+
+      document.getElementById(
+        "pdfViewer"
+      ).style.display = "none";
+
+      /* Remove PDF */
+
+      document.getElementById(
+        "pdfFrame"
+      ).src = "";
+
+    }
+
+  </script>
+
+</body>
+
+</html>
+```
+
+
+  <!-- Bootstrap -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- STORY PAGE JS -->
+
+  <script>
+
+    function openPDF(pdfPath){
+
+      /* Hide Story Cards */
+
+      document.getElementById(
+        "storyCards"
+      ).style.display = "none";
+
+      /* Show PDF Viewer */
+
+      document.getElementById(
+        "pdfViewer"
+      ).style.display = "block";
+
+      /* Load PDF */
+
+      document.getElementById(
+        "pdfFrame"
+      ).src = pdfPath;
+
+      /* Scroll Top */
+
+      window.scrollTo({
+        top:0,
+        behavior:"smooth"
+      });
+
+    }
+
+    function closePDF(){
+
+      /* Show Cards */
+
+      document.getElementById(
+        "storyCards"
+      ).style.display = "flex";
+
+      /* Hide PDF Viewer */
+
+      document.getElementById(
+        "pdfViewer"
+      ).style.display = "none";
+
+      /* Remove PDF */
+
+      document.getElementById(
+        "pdfFrame"
+      ).src = "";
+
+    }
+
+  </script>
+
+</body>
+
+</html>

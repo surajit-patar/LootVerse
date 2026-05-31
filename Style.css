@@ -1,0 +1,568 @@
+
+/* =========================
+ANIMEX PREMIUM CSS
+RED • YELLOW • WHITE THEME
+========================= */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:#111111;
+  color:#F8F9FA;
+  overflow-x:hidden;
+}
+
+/* =========================
+NAVBAR
+========================= */
+
+.navbar{
+  background:rgba(10,10,10,0.92);
+  backdrop-filter:blur(12px);
+  padding:15px 0;
+}
+
+.navbar-brand{
+  font-size:2rem;
+  font-weight:800;
+  color:#FF2E2E !important;
+}
+
+.nav-link{
+  color:white !important;
+  margin-left:15px;
+  transition:0.3s;
+  font-weight:500;
+}
+
+.nav-link:hover{
+  color:#FFD93D !important;
+}
+
+/* =========================
+HERO SECTION
+========================= */
+
+.hero{
+
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+
+  background:
+  linear-gradient(
+    to right,
+    rgba(0,0,0,0.92),
+    rgba(0,0,0,0.55)
+  ),
+
+  url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071&auto=format&fit=crop');
+
+  background-size:cover;
+  background-position:center;
+
+  padding-top:100px;
+}
+
+.hero h1{
+  font-size:4.5rem;
+  font-weight:800;
+  line-height:1.2;
+}
+
+.hero span{
+  color:#FFD93D;
+}
+
+.hero p{
+  color:#d0d0d0;
+  margin-top:20px;
+  line-height:1.9;
+  font-size:1.1rem;
+}
+
+/* =========================
+BUTTONS
+========================= */
+
+.btn-custom{
+
+  background:#FF2E2E;
+  border:none;
+  color:white;
+
+  padding:14px 35px;
+
+  border-radius:50px;
+
+  margin-top:25px;
+
+  transition:0.4s;
+
+  font-weight:600;
+}
+
+.btn-custom:hover{
+
+  background:#FFD93D;
+  color:black;
+
+  transform:translateY(-4px);
+}
+
+/* =========================
+SECTION TITLE
+========================= */
+
+.section-title{
+  text-align:center;
+  margin-bottom:60px;
+}
+
+.section-title h2{
+  font-size:3rem;
+  font-weight:700;
+}
+
+/* =========================
+GLASS BOX
+========================= */
+
+.glass-box{
+
+  background:rgba(255,255,255,0.05);
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  border-radius:20px;
+
+  backdrop-filter:blur(10px);
+
+  transition:0.4s;
+}
+
+.glass-box:hover{
+
+  transform:translateY(-8px);
+
+  box-shadow:0 0 25px rgba(255,217,61,0.4);
+}
+
+.counter{
+  color:#FFD93D;
+  font-weight:700;
+}
+
+/* =========================
+PRODUCT CARD
+========================= */
+
+.product-card{
+
+  background:#1B1B1B;
+
+  border-radius:25px;
+
+  overflow:hidden;
+
+  transition:0.5s;
+
+  border:1px solid transparent;
+
+  height:100%;
+}
+
+.product-card:hover{
+
+  transform:translateY(-12px);
+
+  border-color:#FFD93D;
+
+  box-shadow:0 0 30px rgba(255,217,61,0.4);
+}
+
+.product-card img{
+
+  width:100%;
+  height:320px;
+
+  object-fit:cover;
+}
+
+.product-content{
+  padding:20px;
+}
+
+.product-content h5{
+  font-weight:600;
+  margin-bottom:10px;
+}
+
+.price{
+
+  color:#FFD93D;
+
+  font-size:1.2rem;
+
+  font-weight:700;
+}
+
+.cart-btn{
+
+  width:100%;
+
+  background:#FF2E2E;
+
+  border:none;
+
+  color:white;
+
+  padding:12px;
+
+  border-radius:12px;
+
+  margin-top:15px;
+
+  transition:0.4s;
+}
+
+.cart-btn:hover{
+
+  background:#FFD93D;
+
+  color:black;
+}
+
+/* =========================
+STORY SECTION
+========================= */
+
+.story-section{
+  background:#151515;
+}
+
+.comic-card{
+
+  background:linear-gradient(
+    135deg,
+    rgba(255,46,46,0.15),
+    rgba(255,217,61,0.08)
+  );
+
+  padding:40px;
+
+  border-radius:30px;
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter:blur(10px);
+}
+
+.chapter{
+
+  color:#FFD93D;
+
+  letter-spacing:3px;
+
+  font-size:0.9rem;
+}
+
+.comic-card h2{
+
+  font-size:3rem;
+
+  margin:15px 0;
+
+  font-weight:700;
+}
+
+.comic-card p{
+
+  color:#d0d0d0;
+
+  line-height:1.9;
+}
+
+.story-img{
+
+  border-radius:30px;
+
+  transition:0.5s;
+}
+
+.story-img:hover{
+  transform:scale(1.03);
+}
+
+/* =========================
+HERO / MARVEL CARDS
+========================= */
+
+.hero-card,
+.marvel-card{
+
+  position:relative;
+
+  overflow:hidden;
+
+  border-radius:25px;
+
+  cursor:pointer;
+}
+
+.hero-card img,
+.marvel-card img{
+
+  width:100%;
+
+  height:500px;
+
+  object-fit:cover;
+
+  transition:0.6s;
+}
+
+.hero-card:hover img,
+.marvel-card:hover img{
+  transform:scale(1.1);
+}
+
+.hero-overlay,
+.marvel-overlay{
+
+  position:absolute;
+
+  inset:0;
+
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,0.95),
+    rgba(0,0,0,0.1)
+  );
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:end;
+
+  padding:30px;
+}
+
+.hero-overlay h3,
+.marvel-overlay h3{
+
+  font-size:2rem;
+
+  font-weight:700;
+}
+
+.hero-overlay p{
+  color:#d0d0d0;
+}
+
+/* =========================
+STORY BUTTON
+========================= */
+
+.story-btn{
+
+  margin-top:15px;
+
+  width:fit-content;
+
+  padding:10px 25px;
+
+  border:none;
+
+  border-radius:50px;
+
+  background:#FF2E2E;
+
+  color:white;
+
+  transition:0.4s;
+}
+
+.story-btn:hover{
+
+  background:#FFD93D;
+
+  color:black;
+}
+
+/* =========================
+BANNER
+========================= */
+
+.banner{
+
+  background:linear-gradient(
+    135deg,
+    #FF2E2E,
+    #FFD93D
+  );
+
+  padding:70px 30px;
+
+  border-radius:30px;
+
+  text-align:center;
+}
+
+.banner h2{
+
+  font-size:3rem;
+
+  font-weight:700;
+}
+
+/* =========================
+NEWSLETTER
+========================= */
+
+.newsletter-box{
+
+  background:linear-gradient(
+    135deg,
+    #FF2E2E,
+    #FFD93D
+  );
+
+  padding:70px 30px;
+
+  border-radius:30px;
+}
+
+.newsletter-box h2{
+
+  font-size:3rem;
+
+  font-weight:700;
+}
+
+.newsletter-input{
+
+  padding:15px;
+
+  border:none;
+
+  border-radius:50px 0 0 50px;
+}
+
+.newsletter-btn{
+
+  background:#111111;
+
+  color:white;
+
+  border:none;
+
+  padding:15px 30px;
+
+  border-radius:0 50px 50px 0;
+}
+
+/* =========================
+FOOTER
+========================= */
+
+footer{
+
+  background:#0a0a0a;
+
+  padding:50px 0;
+
+  margin-top:80px;
+}
+
+.social-icons i{
+
+  font-size:1.5rem;
+
+  margin:0 10px;
+
+  cursor:pointer;
+
+  transition:0.4s;
+}
+
+.social-icons i:hover{
+
+  color:#FFD93D;
+
+  transform:translateY(-5px);
+}
+
+/* =========================
+MODAL
+========================= */
+
+.custom-modal{
+
+  background:#111111;
+
+  border-radius:30px;
+
+  overflow:hidden;
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  color:white;
+}
+
+.story-banner img{
+
+  width:100%;
+
+  height:350px;
+
+  object-fit:cover;
+}
+
+.story-text{
+
+  color:#d0d0d0;
+
+  line-height:2;
+
+  font-size:1.05rem;
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media(max-width:768px){
+
+  .hero{
+    text-align:center;
+  }
+
+  .hero h1{
+    font-size:2.7rem;
+  }
+
+  .section-title h2{
+    font-size:2rem;
+  }
+
+  .comic-card h2{
+    font-size:2rem;
+  }
+
+  .banner h2,
+  .newsletter-box h2{
+    font-size:2rem;
+  }
+
+}
